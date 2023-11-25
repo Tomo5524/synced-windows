@@ -1,17 +1,5 @@
 import { PathMe } from "./path";
 
-interface screenType {
-  x: number;
-  y: number;
-  screenX: number;
-  screenY: number;
-  screenWidth: number;
-  screenHeight: number;
-  width: number;
-  height: number;
-  updated: number;
-}
-
 const stats = document.querySelector<HTMLPreElement>(".stats");
 const clear = document.querySelector<HTMLButtonElement>(".clear");
 const video = document.querySelector<HTMLVideoElement>("video");
@@ -114,9 +102,15 @@ function makeSVG() {
     })
     .forEach(([_, screen], i) => {
       if (i === 0) {
-        screenPath.moveTo((screen as screenType).x, (screen as screenType).y);
+        screenPath.moveTo(
+          (screen as WindowDetails).screenX,
+          (screen as WindowDetails).screenY
+        );
       } else {
-        screenPath.lineTo((screen as screenType).x, (screen as screenType).y);
+        screenPath.lineTo(
+          (screen as WindowDetails).screenX,
+          (screen as WindowDetails).screenY
+        );
       }
       // if (i === screens.length - 1) {
       // screenPath.lineTo(screens[0][1].x, screens[0][1].y);
