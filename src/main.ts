@@ -1,10 +1,14 @@
 import { PathMe } from "./path";
+import displayText from "./text-effect";
 
 const stats = document.querySelector<HTMLPreElement>(".stats");
 const clear = document.querySelector<HTMLButtonElement>(".clear");
 const video = document.querySelector<HTMLVideoElement>("video");
 const svg = document.querySelector<SVGElement>("svg");
 const path = document.querySelector<SVGElement>("svg path");
+const messageButton =
+  document.querySelector<HTMLButtonElement>(".messageButton");
+// const message = document.getElementById("text");
 
 type WindowDetails = {
   screenX: number;
@@ -15,6 +19,8 @@ type WindowDetails = {
   height: number;
   updated: number;
 };
+
+const bc = new BroadcastChannel("test_channel");
 
 function getScreens(): [string, WindowDetails][] {
   return Object.entries(window.localStorage)
@@ -129,8 +135,26 @@ function go() {
   timers.push(setInterval(makeSVG, 10));
 }
 
+function sendMessage() {
+  const msg =
+    Math.round(Math.random()) === 0
+      ? "No I am out of your league"
+      : "Yes you are love of my life";
+  bc.postMessage(msg);
+}
+
+bc.onmessage = function (e) {
+  console.log("🚀 ~ file: main.ts:146 ~ e", e);
+  displayText([e.data], "text", ["tomato", "rebeccapurple", "lightblue"]);
+  // messageBox!.innerHTML = e.data;
+};
+
 clear?.addEventListener("click", restart);
-window.addEventListener("beforeunload", removeScreen);
+messageButton?.addEventListener("click", sendMessage);
+window.addEventListener("beforeunload", () => {
+  removeScreen();
+  bc.close();
+});
 
 function populateWebcam() {
   console.log("fired 🔥");
